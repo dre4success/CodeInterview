@@ -9,7 +9,7 @@ type AssetCardProps = {
 
 };
 
-const AssetCard: React.FC<AssetCardProps> = ({ id, host, comment, ip, owner }) => {
+const AssetCard: React.FC<AssetCardProps> = ({  host, comment, ip, owner }) => {
   return (
     <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow duration-300">
       <h3 className="text-lg font-bold text-blue-600 mb-2">Host: {host}</h3>

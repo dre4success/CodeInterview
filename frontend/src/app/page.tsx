@@ -1,12 +1,13 @@
-
+// pages/index.tsx
 'use client';
 
 import * as React from 'react';
-import {  useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 
 import AssetCard from '../components/AssetCard';
 import { useAssets } from './hooks/useAssets';
+import { useDebouncedValue } from './hooks/useDebounce';
 
 type AssetProps = {
   id: number;
@@ -23,6 +24,21 @@ export default function HomePage() {
 
   const assets = data?.pages.flatMap(page => page.assets) ?? [];
 
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (isLoading || isFetchingNextPage) return;
+      if (observerRef.current) observerRef.current.disconnect();
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      });
+      if (node) observerRef.current.observe(node);
+    },
+    [isLoading, isFetchingNextPage, fetchNextPage, hasNextPage]
+  );
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -34,7 +50,7 @@ export default function HomePage() {
           <h1 className="text-4xl font-bold mb-6 text-center text-blue-600">Assets</h1>
           <input
             type="text"
-            placeholder="Search assets..."
+            placeholder="Search by host..."
             value={searchTerm}
             onChange={handleSearch}
             className="border border-gray-300 rounded-md py-2 px-4 mb-6 w-full max-w-lg mx-auto block"
@@ -44,35 +60,11 @@ export default function HomePage() {
               <AssetCard key={asset.id} {...asset} />
             ))}
           </div>
-          {hasNextPage && (
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={() => fetchNextPage()}
-                disabled={isFetchingNextPage}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 disabled:opacity-50"
-              >
-                {isFetchingNextPage ? 'Loading more...' : 'Load More'}
-              </button>
-            </div>
-          )}
+          <div ref={loadMoreRef} className="h-10"></div>
+          {isLoading && <p className="text-center">Loading...</p>}
+          {isError && <p className="text-center text-red-500">Error loading data</p>}
         </div>
       </section>
     </main>
   );
-}
-
-function useDebouncedValue(value: string, delay: number): string {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  React.useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
 }
