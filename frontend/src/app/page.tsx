@@ -1,13 +1,13 @@
-// pages/index.tsx
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 
 import AssetCard from '../components/AssetCard';
 import { useAssets } from './hooks/useAssets';
 import { useDebouncedValue } from './hooks/useDebounce';
+import Skeleton from '@/components/Skeleton';
 
 type AssetProps = {
   id: number;
@@ -56,13 +56,18 @@ export default function HomePage() {
             className="border border-gray-300 rounded-md py-2 px-4 mb-6 w-full max-w-lg mx-auto block"
           />
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {assets.map((asset: AssetProps) => (
-              <AssetCard key={asset.id} {...asset} />
+            {assets.filter(asset => asset).map((asset: AssetProps) => (
+              <AssetCard key={asset?.id} {...asset} />
             ))}
           </div>
-          <div ref={loadMoreRef} className="h-10"></div>
-          {isLoading && <p className="text-center">Loading...</p>}
+          {hasNextPage && (
+            <div ref={loadMoreRef} className="h-10"></div>
+          )}
+          {isLoading && <Skeleton className="h-72 w-102" />}
           {isError && <p className="text-center text-red-500">Error loading data</p>}
+          {!hasNextPage && !isFetchingNextPage && !isLoading && (
+            <p className="text-center text-gray-500 mt-4">No more data to load</p>
+          )}
         </div>
       </section>
     </main>

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -10,9 +9,9 @@ export async function GET(req: NextRequest) {
     const page = searchParams.get('page')
     const limit = searchParams.get('limit')
     const host = searchParams.get('host')
-    
-    console.log({ API_URL, page, limit, host })
-    const response = await axios.get(`${API_URL}`, { params: { page, limit, host } })
-    return NextResponse.json(response.data)
 
+    console.log({ API_URL, page, limit, host })
+    const response = await fetch(`${API_URL}?page=${page}&limit=${limit}&host=${host}`)
+    const data = await response.json()
+    return NextResponse.json(data)
 }
