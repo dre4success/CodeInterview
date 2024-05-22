@@ -6,6 +6,7 @@ import '@/styles/globals.css';
 import '@/styles/colors.css';
 
 import { siteConfig } from '@/constant/config';
+
 import ReactQueryProvider from './utils/ReactQueryProvider';
 
 // !STARTERCONF Change these default meta

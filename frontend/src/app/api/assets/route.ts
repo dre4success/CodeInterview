@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
     const limit = searchParams.get('limit')
     const host = searchParams.get('host')
 
-    console.log({ API_URL, page, limit, host })
     const response = await fetch(`${API_URL}?page=${page}&limit=${limit}&host=${host}`)
     const data = await response.json()
     return NextResponse.json(data)

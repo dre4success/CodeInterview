@@ -1,13 +1,12 @@
 'use client';
 
-import * as React from 'react';
-import { useState, useRef, useCallback } from 'react';
+import { useCallback,useRef, useState } from 'react';
 
+import Skeleton from '@/components/Skeleton';
 
-import AssetCard from '../components/AssetCard';
 import { useAssets } from './hooks/useAssets';
 import { useDebouncedValue } from './hooks/useDebounce';
-import Skeleton from '@/components/Skeleton';
+import AssetCard from '../components/AssetCard';
 
 type AssetProps = {
   id: number;
