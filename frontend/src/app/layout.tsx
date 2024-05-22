@@ -6,6 +6,7 @@ import '@/styles/globals.css';
 import '@/styles/colors.css';
 
 import { siteConfig } from '@/constant/config';
+import ReactQueryProvider from './utils/ReactQueryProvider';
 
 // !STARTERCONF Change these default meta
 // !STARTERCONF Look at @/constant/config to change them
@@ -56,7 +57,12 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <body>{children}</body>
+      <body>
+        <ReactQueryProvider>
+
+        {children}
+        </ReactQueryProvider>
+        </body>
     </html>
   );
 }
