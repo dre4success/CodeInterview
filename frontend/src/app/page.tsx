@@ -55,14 +55,18 @@ export default function HomePage() {
             className="border border-gray-300 rounded-md py-2 px-4 mb-6 w-full max-w-lg mx-auto block"
           />
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {assets.filter(asset => asset).map((asset: AssetProps) => (
-              <AssetCard key={asset?.id} {...asset} />
-            ))}
+          {isLoading ? (
+              <Skeleton className="h-72 w-full" />
+            ) : (
+              assets.filter(asset => asset).map((asset: AssetProps) => (
+                <AssetCard key={asset.id} {...asset} />
+              ))
+            )}
           </div>
           {hasNextPage && (
             <div ref={loadMoreRef} className="h-10"></div>
           )}
-          {isLoading && <Skeleton className="h-72 w-102" />}
+          {/* {isLoading && <Skeleton className="h-72 w-102" />} */}
           {isError && <p className="text-center text-red-500">Error loading data</p>}
           {!hasNextPage && !isFetchingNextPage && !isLoading && (
             <p className="text-center text-gray-500 mt-4">No more data to load</p>
